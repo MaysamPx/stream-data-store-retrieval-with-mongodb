@@ -1,16 +1,12 @@
 # stream-data-store-retrieval-with-mongodb
-**Problem/Task:** 
+### **Problem/Task:** 
 
 Implement a data pipeline to process streaming IoT data. Data is a sort of sensor reading for specific devices. The goal is to provide a simulation of these kinds of data pipelines to handle the incoming data and provide some API to get the average/median/max/min values of the reported metrics. 
 
 
 **Implementation, in a nutshell:**
 
-
-# IoT Data Pipeline Project
-
-
-### Overview
+### Implementation Overview
 For this project, I've built a lightweight spring boot application that simulates an IoT data stream. It doesn't interact with real devices but instead generates random data to represent sensor readings.
 
 In addition, I've implemented a separate mechanism for storing and retrieving specific metrics reported by different device types.
@@ -19,7 +15,7 @@ This project includes two main components: **SensorDataProducer**, and **SensorD
 The SensorDataProducer sends sensor data to a MongoDB Collection, and the SensorDataService class reads sensor data from the same collection using the MongoDB as a Data Pipeline Storage System. 
 
 ### Architecture
-![image](https://github.com/MaysamPx/stream-data-store-retrieval-with-springboot-mongodb/assets/13215181/4304755a-0328-4013-ba6e-a8d00e092fd3)
+![image](https://github.com/MaysamPx/stream-data-store-retrieval-with-springboot-mongodb/assets/13215181/e8af092b-f7bf-498c-8477-968ce0af2369)
 
 ### Dependencies
 
@@ -70,14 +66,14 @@ Postman Collection
 
 
 ### Final tips
-####Application Flow:
-1. Install and Configure the Kafka, Zookeeper, and KSQL DB instances.
-2. Apply Configurations (in application.propertiese and GlobalVariables class).
+#### Application Flow:
+1. Install and Configure the MongoDB.
+2. Apply Configurations (in application.properties and GlobalVariables class).
 3. Set Up Run Configuration in the IDE.
 4. Make sure that all Maven dependencies are imported correctly.
 5. Build and run the application.
 6. Call the Authenticate API.
-7. Start the Stream Generator by calling the exposed API available in the Swagger doc page.
+7. Start the Stream Generator by calling the exposed API available on the Swagger doc page.
 8. Call the other APIs.
 9. For Better performance create a compound index on the fields of SensorName and ReportTimestamp.
 
