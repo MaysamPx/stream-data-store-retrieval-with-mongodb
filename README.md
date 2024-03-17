@@ -1,7 +1,7 @@
 # Stream data store retrieval with mongodb
 ### **Problem/Task:** 
 
-Implement a data pipeline to process streaming IoT data. Data is a sort of sensor reading for specific devices. The goal is to provide a simulation of these kinds of data pipelines to handle the incoming data and provide some API to get the average/median/max/min values of the reported metrics. 
+Implement a data pipeline to process streaming IoT data. Data is a sort of sensor reading for specific devices. The goal is to provide a simulation of these kinds of data pipelines to handle the incoming data and provide some APIs to get the average/median/max/min values of the reported metrics. 
 
 
 ### Implementation Overview
