@@ -82,4 +82,4 @@ db.sensorDataDTO.createIndex( { SensorName: "text", ReportTimestamp: -1 } )
 #### Default Username & Password:
 Username: datastream
 
-Password: datastream1!
+Password: Datastream1!

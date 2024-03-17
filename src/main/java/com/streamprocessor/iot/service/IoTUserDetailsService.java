@@ -17,7 +17,7 @@ public class IoTUserDetailsService implements UserDetailsService {
 
     public IoTUserDetailsService() {
         users.put("datastream", User.builder()
-                .username("datastream1!")
+                .username("Datastream1!")
                 .password(new BCryptPasswordEncoder().encode("Datastream1!"))
                 .roles("USER")
                 .build());
