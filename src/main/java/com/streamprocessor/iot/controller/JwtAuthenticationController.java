@@ -4,11 +4,12 @@ import com.streamprocessor.iot.authentication.JwtRequest;
 import com.streamprocessor.iot.authentication.JwtResponse;
 import com.streamprocessor.iot.authentication.JwtUtil;
 import com.streamprocessor.iot.service.IoTUserDetailsService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,23 +20,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Api(value = "AuthenticationEndpoint", tags = "Authentication Endpoint for the JWT Token")
+@Tag(name = "Authentication", description = "Authentication Endpoint for the JWT Token")
 public class JwtAuthenticationController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
+    private final IoTUserDetailsService userDetailsService;
 
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    private IoTUserDetailsService userDetailsService;
+    public JwtAuthenticationController(AuthenticationManager authenticationManager,
+                                       JwtUtil jwtUtil,
+                                       IoTUserDetailsService userDetailsService) {
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
+        this.userDetailsService = userDetailsService;
+    }
 
     @PostMapping("/authenticate")
-    @ApiOperation(value = "Authenticate user and generate JWT token", response = JwtResponse.class)
+    @Operation(summary = "Authenticate user and generate JWT token")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully authenticated and generated JWT token"),
-            @ApiResponse(code = 401, message = "Invalid credentials")
+            @ApiResponse(responseCode = "200", description = "Successfully authenticated and generated JWT token",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = JwtResponse.class)) }),
+            @ApiResponse(responseCode = "401", description = "Invalid credentials",
+                    content = @Content)
     })
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
         try {
@@ -52,5 +59,4 @@ public class JwtAuthenticationController {
 
         return ResponseEntity.ok(new JwtResponse(jwt));
     }
-
 }

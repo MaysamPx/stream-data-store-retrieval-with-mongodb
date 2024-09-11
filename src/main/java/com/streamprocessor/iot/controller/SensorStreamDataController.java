@@ -1,16 +1,17 @@
 package com.streamprocessor.iot.controller;
 
-
 import com.streamprocessor.iot.exceptions.*;
 import com.streamprocessor.iot.model.APIRequestInterval;
 import com.streamprocessor.iot.model.SensorDataDTO;
 import com.streamprocessor.iot.service.SensorDataService;
 import com.streamprocessor.iot.util.DateTimeUtil;
 import com.streamprocessor.iot.util.ParameterValidator;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,11 +22,10 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-
 @RestController
 @EnableCaching
 @RequestMapping("/api/v1")
-@Api(value = "SensorData", tags = "Sensor's Data REST APIs (Sensor Data/Min/Max/Avg)")
+@Tag(name = "Sensor Data", description = "REST APIs for Sensor Data operations including retrieval of min, max, average, and median values.")
 public class SensorStreamDataController {
 
     private final SensorDataService sensorDataService;
@@ -34,19 +34,21 @@ public class SensorStreamDataController {
         this.sensorDataService = sensorDataService;
     }
 
-    @ApiOperation(value = "Get sensor data", notes = "Retrieve a list of sensor data for a given sensor name, with optional start and end time parameters. Returns a pageable list.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Sensor data retrieved successfully"),
-            @ApiResponse(code = 400, message = "Invalid request parameters"),
-            @ApiResponse(code = 401, message = "Unauthorized request"),
-            @ApiResponse(code = 500, message = "Internal server error")
-    })
+    @Operation(summary = "Get sensor data", description = "Retrieve a list of sensor data for a given sensor name, with optional start and end time parameters. Returns a pageable list.")
+    @ApiResponse(responseCode = "200", description = "Sensor data retrieved successfully",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = Page.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid request parameters")
+    @ApiResponse(responseCode = "401", description = "Unauthorized request")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
     @GetMapping("/{sensorName}")
-    public ResponseEntity<Page<SensorDataDTO>> getSensorData(@PathVariable String sensorName,
-                                                             @RequestParam(required = false) String start,
-                                                             @RequestParam(required = false) String end,
-                                                             @RequestParam(defaultValue = "0") Integer page,
-                                                             @RequestParam(defaultValue = "10") Integer size) throws InconsistentPassedInterval, InvalidPassedIntervalParameters {
+    public ResponseEntity<Page<SensorDataDTO>> getSensorData(
+            @Parameter(description = "Name of the sensor") @PathVariable String sensorName,
+            @Parameter(description = "Start time in ISO 8601 format") @RequestParam(required = false) String start,
+            @Parameter(description = "End time in ISO 8601 format") @RequestParam(required = false) String end,
+            @Parameter(description = "Page number") @RequestParam(defaultValue = "0") Integer page,
+            @Parameter(description = "Page size") @RequestParam(defaultValue = "10") Integer size)
+            throws InconsistentPassedInterval, InvalidPassedIntervalParameters {
 
         APIRequestInterval requestInterval = DateTimeUtil.getRequestInterval(start, end);
 
@@ -56,23 +58,24 @@ public class SensorStreamDataController {
         return ResponseEntity.ok(sensorDataPage);
     }
 
-    @ApiOperation(value = "Get minimum sensor value", notes = "Retrieve the minimum sensor value for a given sensor name, with optional start and end time parameters.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Minimum sensor value retrieved successfully"),
-            @ApiResponse(code = 400, message = "Invalid request parameters"),
-            @ApiResponse(code = 401, message = "Unauthorized request"),
-            @ApiResponse(code = 500, message = "Internal server error")
-    })
+    @Operation(summary = "Get minimum sensor value", description = "Retrieve the minimum sensor value for a given sensor name, with optional start and end time parameters.")
+    @ApiResponse(responseCode = "200", description = "Minimum sensor value retrieved successfully",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = Double.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid request parameters")
+    @ApiResponse(responseCode = "401", description = "Unauthorized request")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
     @GetMapping("/{sensorName}/min")
-    public ResponseEntity<?> getMinSensorValue(@PathVariable String sensorName,
-                                                    @RequestParam(required = true) String start,
-                                                    @RequestParam(required = true) String end) throws InconsistentPassedInterval, InvalidPassedIntervalParameters, InterruptedException, ErrorInCalculatingMetric, IOException, URISyntaxException {
+    public ResponseEntity<?> getMinSensorValue(
+            @Parameter(description = "Name of the sensor") @PathVariable String sensorName,
+            @Parameter(description = "Start time in ISO 8601 format") @RequestParam String start,
+            @Parameter(description = "End time in ISO 8601 format") @RequestParam String end)
+            throws InconsistentPassedInterval, InvalidPassedIntervalParameters, InterruptedException, ErrorInCalculatingMetric, IOException, URISyntaxException {
+
         try {
             ParameterValidator.isValidSensorName(sensorName);
-
             APIRequestInterval requestInterval = DateTimeUtil.getRequestInterval(start, end);
             double minValue = sensorDataService.getSensorDataMinValue(sensorName, requestInterval.getStart(), requestInterval.getEnd());
-
             return ResponseEntity.ok(minValue);
         } catch (InconsistentPassedInterval | InvalidPassedIntervalParameters e) {
             String errorMessage = "Invalid request parameters: " + e.getMessage();
@@ -82,24 +85,25 @@ public class SensorStreamDataController {
         }
     }
 
-    @ApiOperation(value = "Get maximum sensor value", notes = "Retrieve the maximum sensor value for a given sensor name, with optional start and end time parameters.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Maximum sensor value retrieved successfully"),
-            @ApiResponse(code = 400, message = "Invalid request parameters"),
-            @ApiResponse(code = 401, message = "Unauthorized request"),
-            @ApiResponse(code = 500, message = "Internal server error")
-    })
+    @Operation(summary = "Get maximum sensor value", description = "Retrieve the maximum sensor value for a given sensor name, with optional start and end time parameters.")
+    @ApiResponse(responseCode = "200", description = "Maximum sensor value retrieved successfully",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = Double.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid request parameters")
+    @ApiResponse(responseCode = "401", description = "Unauthorized request")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
     @GetMapping("/{sensorName}/max")
-    public ResponseEntity<?> getMaxSensorValue(@PathVariable String sensorName,
-                                                    @RequestParam(required = true) String start,
-                                                    @RequestParam(required = true) String end) throws InconsistentPassedInterval, InvalidPassedIntervalParameters, InterruptedException, ErrorInCalculatingMetric, IOException, CalculatedMetricNotFoundException {
-        try{
+    public ResponseEntity<?> getMaxSensorValue(
+            @Parameter(description = "Name of the sensor") @PathVariable String sensorName,
+            @Parameter(description = "Start time in ISO 8601 format") @RequestParam String start,
+            @Parameter(description = "End time in ISO 8601 format") @RequestParam String end)
+            throws InconsistentPassedInterval, InvalidPassedIntervalParameters, InterruptedException, ErrorInCalculatingMetric, IOException, CalculatedMetricNotFoundException {
+
+        try {
             ParameterValidator.isValidSensorName(sensorName);
             APIRequestInterval requestInterval = DateTimeUtil.getRequestInterval(start, end);
-            double maxValue =  sensorDataService.getSensorDataMaxValue(sensorName, requestInterval.getStart(), requestInterval.getEnd());
-
+            double maxValue = sensorDataService.getSensorDataMaxValue(sensorName, requestInterval.getStart(), requestInterval.getEnd());
             return ResponseEntity.ok(maxValue);
-
         } catch (InconsistentPassedInterval | InvalidPassedIntervalParameters e) {
             String errorMessage = "Invalid request parameters: " + e.getMessage();
             return ResponseEntity.badRequest().body(new ErrorResponse(errorMessage));
@@ -108,25 +112,25 @@ public class SensorStreamDataController {
         }
     }
 
-
-    @ApiOperation(value = "Get average sensor value", notes = "Retrieve the average sensor value for a given sensor name, with optional start and end time parameters.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Median sensor value retrieved successfully"),
-            @ApiResponse(code = 400, message = "Invalid request parameters"),
-            @ApiResponse(code = 401, message = "Unauthorized request"),
-            @ApiResponse(code = 500, message = "Internal server error")
-    })
+    @Operation(summary = "Get average sensor value", description = "Retrieve the average sensor value for a given sensor name, with optional start and end time parameters.")
+    @ApiResponse(responseCode = "200", description = "Average sensor value retrieved successfully",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = Double.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid request parameters")
+    @ApiResponse(responseCode = "401", description = "Unauthorized request")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
     @GetMapping("/{sensorName}/average")
-    public ResponseEntity<?> getAverageSensorValue(@PathVariable String sensorName,
-                                                       @RequestParam(required = true) String start,
-                                                       @RequestParam(required = true) String end) throws InconsistentPassedInterval, InvalidPassedIntervalParameters, InterruptedException, ErrorInCalculatingMetric, IOException {
-        try{
+    public ResponseEntity<?> getAverageSensorValue(
+            @Parameter(description = "Name of the sensor") @PathVariable String sensorName,
+            @Parameter(description = "Start time in ISO 8601 format") @RequestParam String start,
+            @Parameter(description = "End time in ISO 8601 format") @RequestParam String end)
+            throws InconsistentPassedInterval, InvalidPassedIntervalParameters, InterruptedException, ErrorInCalculatingMetric, IOException {
+
+        try {
             ParameterValidator.isValidSensorName(sensorName);
             APIRequestInterval requestInterval = DateTimeUtil.getRequestInterval(start, end);
             double averageValue = sensorDataService.getSensorDataAvgValue(sensorName, requestInterval.getStart(), requestInterval.getEnd());
-
             return ResponseEntity.ok(averageValue);
-
         } catch (InconsistentPassedInterval | InvalidPassedIntervalParameters e) {
             String errorMessage = "Invalid request parameters: " + e.getMessage();
             return ResponseEntity.badRequest().body(new ErrorResponse(errorMessage));
@@ -135,17 +139,25 @@ public class SensorStreamDataController {
         }
     }
 
+    @Operation(summary = "Get median sensor value", description = "Retrieve the median sensor value for a given sensor name, with optional start and end time parameters.")
+    @ApiResponse(responseCode = "200", description = "Median sensor value retrieved successfully",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = Double.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid request parameters")
+    @ApiResponse(responseCode = "401", description = "Unauthorized request")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
     @GetMapping("/{sensorName}/median")
-    public ResponseEntity<?> getMedianSensorValue(@PathVariable String sensorName,
-                                                   @RequestParam(required = true) String start,
-                                                   @RequestParam(required = true) String end) throws InconsistentPassedInterval, InvalidPassedIntervalParameters, InterruptedException, ErrorInCalculatingMetric, IOException {
-        try{
+    public ResponseEntity<?> getMedianSensorValue(
+            @Parameter(description = "Name of the sensor") @PathVariable String sensorName,
+            @Parameter(description = "Start time in ISO 8601 format") @RequestParam String start,
+            @Parameter(description = "End time in ISO 8601 format") @RequestParam String end)
+            throws InconsistentPassedInterval, InvalidPassedIntervalParameters, InterruptedException, ErrorInCalculatingMetric, IOException {
+
+        try {
             ParameterValidator.isValidSensorName(sensorName);
             APIRequestInterval requestInterval = DateTimeUtil.getRequestInterval(start, end);
             double medianValue = sensorDataService.getSensorDataMedianValue(sensorName, requestInterval.getStart(), requestInterval.getEnd());
-
             return ResponseEntity.ok(medianValue);
-
         } catch (InconsistentPassedInterval | InvalidPassedIntervalParameters e) {
             String errorMessage = "Invalid request parameters: " + e.getMessage();
             return ResponseEntity.badRequest().body(new ErrorResponse(errorMessage));
@@ -154,7 +166,7 @@ public class SensorStreamDataController {
         }
     }
 
-    public class ErrorResponse {
+    public static class ErrorResponse {
         private String errorMessage;
 
         public ErrorResponse(String errorMessage) {
@@ -169,5 +181,4 @@ public class SensorStreamDataController {
             this.errorMessage = errorMessage;
         }
     }
-
 }
