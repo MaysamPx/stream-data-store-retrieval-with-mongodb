@@ -38,8 +38,8 @@ The SensorDataProducer sends sensor data to a MongoDB Collection, and the Sensor
 To build and run this project, follow these steps:
 
 1.	Clone the current Github repo (In a preferred IDE).
-2.	Install and run an instance of the MongoDB on a specific port or 17017.
-3.	Install OpenJDK 15 on your local machine.
+2.	Install and run an instance of the MongoDB on a specific port or 27017.
+3.	Install OpenJDK 21 on your local machine.
 4.	Update the application.properties file to specify the MongoDB and other properties.
 5.	Run the SensorDataProducerApplication and SensorDataConsumerApplication classes to start the producer and consumer components, respectively.
 Testing the REST APIs
@@ -48,9 +48,9 @@ Testing the REST APIs
 
 **Option 1**
 
-1.	Use the Swagger UI to see more details and run each API as well.
+1.	Use the OpenAPI to see more details and run each API as well.
 
-2.	Open your browser and go to http://localhost:8080/swagger-ui.
+2.	Open your browser and go to http://localhost:8080/v3/api-docs.
 
 **Option 2**
 
@@ -75,7 +75,9 @@ Postman Collection
 8. Call the other APIs.
 9. For Better performance create a compound index on the fields of SensorName and ReportTimestamp.
 
+```
 db.sensorDataDTO.createIndex( { SensorName: "text", ReportTimestamp: -1 } )
+```
 
 #### Default Username & Password:
 Username: datastream
