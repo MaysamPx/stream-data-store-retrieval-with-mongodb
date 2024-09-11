@@ -71,7 +71,7 @@ Postman Collection
 4. Make sure that all Maven dependencies are imported correctly.
 5. Build and run the application.
 6. Call the Authenticate API.
-7. Start the Stream Generator by calling the exposed API available on the Swagger doc page.
+7. Start the Stream Generator by calling the exposed API available on the OpenAPI doc page.
 8. Call the other APIs.
 9. For Better performance create a compound index on the fields of SensorName and ReportTimestamp.
 
