@@ -57,7 +57,7 @@ Testing the REST APIs
 1.	Get the JWT token.
 2.	Pass the JWT token in the Authorization header of each request.
 
-Postman Collection
+Postman Collection (Not ready yet)
 
 •	Import the provided Postman collection in the 'PostmanCollectionForRESTAPIs' directory.
 
