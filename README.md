@@ -33,6 +33,30 @@ The SensorDataProducer sends sensor data to a MongoDB Collection, and the Sensor
 
 •	JWT (Used for the scalable security by distributed stateless token verification)
 
+### Installing MongoDB on a Docker Container Locally
+
+1. Install Docker Desktop on your local machine
+2. Ensure Docker Desktop is installed and running.
+3. Open a terminal and run:
+```
+docker pull mongo
+```
+4. Start a MongoDB container:
+```
+docker run -d -p 27017:27017 --name mongodb mongo
+```
+5.  MongoDB is now running on `localhost:27017`.
+
+To stop the container run the following command:
+```
+docker stop mongodb
+```
+
+To restart:
+```
+docker start mongodb
+```
+
 ### Building and Running the Project
 
 To build and run this project, follow these steps:
@@ -60,7 +84,6 @@ Testing the REST APIs
 Postman Collection (Not ready yet)
 
 •	Import the provided Postman collection in the 'PostmanCollectionForRESTAPIs' directory.
-
 
 
 ### Final tips
