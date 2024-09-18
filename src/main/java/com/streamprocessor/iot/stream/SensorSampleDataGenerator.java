@@ -7,7 +7,6 @@ import com.streamprocessor.iot.model.SensorType;
 import com.streamprocessor.iot.service.SensorDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -24,22 +23,22 @@ public class SensorSampleDataGenerator {
     private static final Logger logger = LoggerFactory.getLogger(SensorSampleDataGenerator.class);
 
 
-    @Autowired
-    private SensorDataService sensorDataService;
+    private final SensorDataService sensorDataService;
 
     private static final String[] SENSOR_NAMES = GlobalVariables.SENSOR_NAMES;
     private static final Random RANDOM = new Random();
 
-    ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()); //NOPMD - suppressed DoNotUseThreads - TODO explain reason for suppression
+    ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
     ScheduledFuture<?> task;
 
-    public SensorSampleDataGenerator(SensorDataService sensorDataService ) {
+    public SensorSampleDataGenerator(SensorDataService sensorDataService) {
         this.sensorDataService = sensorDataService;
     }
 
     private void generateData() {
         String sensorName = SENSOR_NAMES[RANDOM.nextInt(SENSOR_NAMES.length)];
         SensorType type = generateSensorType(sensorName);
+        assert type != null;
         MetricType metric = generateMetricType(type);
         Double metricValue = generateMetricValue(metric);
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
@@ -53,47 +52,32 @@ public class SensorSampleDataGenerator {
                 .reportTimestamp(timestamp)
                 .build();
 
-
         sensorDataService.saveSensorData(sensorData);
     }
 
     private SensorType generateSensorType(String sensorName) {
-        switch (sensorName) {
-            case "Sensor_1":
-                return SensorType.THERMOSTAT;
-            case "Sensor_2":
-                return SensorType.FUEL_READING;
-            case "Sensor_3":
-                return SensorType.HEART_RATE_METER;
-            default:
-                return null;
-        }
+        return switch (sensorName) {
+            case "Sensor_1" -> SensorType.THERMOSTAT;
+            case "Sensor_2" -> SensorType.FUEL_READING;
+            case "Sensor_3" -> SensorType.HEART_RATE_METER;
+            default -> null;
+        };
     }
 
     private MetricType generateMetricType(SensorType sensorType) {
-        switch (sensorType) {
-            case HEART_RATE_METER:
-                return MetricType.HEART_RATE;
-            case FUEL_READING:
-                return MetricType.FUEL_LEVEL;
-            case THERMOSTAT:
-                return MetricType.TEMPERATURE;
-            default:
-                return null;
-        }
+        return switch (sensorType) {
+            case HEART_RATE_METER -> MetricType.HEART_RATE;
+            case FUEL_READING -> MetricType.FUEL_LEVEL;
+            case THERMOSTAT -> MetricType.TEMPERATURE;
+        };
     }
 
     private Double generateMetricValue(MetricType metric) {
-        switch (metric) {
-            case TEMPERATURE:
-                return Double.valueOf(generateTemperature());
-            case HEART_RATE:
-                return Double.valueOf(generateHeartRate());
-            case FUEL_LEVEL:
-                return Double.valueOf(generateFuelLevel());
-            default:
-                return null;
-        }
+        return switch (metric) {
+            case TEMPERATURE -> generateTemperature();
+            case HEART_RATE -> (double) generateHeartRate();
+            case FUEL_LEVEL -> (double) generateFuelLevel();
+        };
     }
 
     private double generateTemperature() {
