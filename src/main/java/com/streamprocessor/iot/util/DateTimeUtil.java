@@ -3,11 +3,12 @@ package com.streamprocessor.iot.util;
 import com.streamprocessor.iot.exceptions.InconsistentPassedInterval;
 import com.streamprocessor.iot.exceptions.InvalidPassedIntervalParameters;
 import com.streamprocessor.iot.model.APIRequestInterval;
+import lombok.experimental.UtilityClass;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-
+@UtilityClass
 public class DateTimeUtil {
 
     public static LocalDateTime getLocalDateTimeFromString(String timestamp){
