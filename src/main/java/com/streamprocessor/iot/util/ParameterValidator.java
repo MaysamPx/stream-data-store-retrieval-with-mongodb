@@ -2,7 +2,9 @@ package com.streamprocessor.iot.util;
 
 import com.streamprocessor.iot.constants.GlobalVariables;
 import com.streamprocessor.iot.exceptions.SensorNotFoundException;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class ParameterValidator {
 
     public static boolean isValidSensorName(String sensorName) throws SensorNotFoundException {

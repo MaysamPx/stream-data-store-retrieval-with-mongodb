@@ -44,6 +44,7 @@ public class SecurityConfigurer {
                 )
                 .httpBasic(httpBasic -> {})
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                //TODO: Replace the deprecated one with new updates.
                 .headers(headers -> headers
                         .contentSecurityPolicy("default-src 'self'; font-src 'self' data:; img-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';")
                 );
