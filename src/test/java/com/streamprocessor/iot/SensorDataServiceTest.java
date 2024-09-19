@@ -49,7 +49,7 @@ class SensorDataServiceTest {
     }
 
     @Test
-    void saveSensorData() {
+    void testSaveSensorData() {
         SensorDataDTO sensorDataDTO = new SensorDataDTO();
         sensorDataDTO.setSensorName("Sensor_1");
         sensorDataDTO.setReportTimestamp("2022-04-14T01:00:00.114");
@@ -61,7 +61,7 @@ class SensorDataServiceTest {
     }
 
     @Test
-    void getSensorDataMinValue() {
+    void testGetSensorDataMinValue() {
         when(sensorDataRepository.findBySensorNameAndReportTimestampBetween("Sensor_1", "2021-04-14T01:00:00.112", "2024-04-14T01:00:00.112")).thenReturn(sensorDataList);
 
         double minValue = sensorDataService.getSensorDataMinValue("Sensor_1", "2021-04-14T01:00:00.112", "2024-04-14T01:00:00.112");
@@ -70,7 +70,7 @@ class SensorDataServiceTest {
     }
 
     @Test
-    void getSensorDataMaxValue() {
+    void testGetSensorDataMaxValue() {
         when(sensorDataRepository.findBySensorNameAndReportTimestampBetween("Sensor_1", "2021-04-14T01:00:00.112", "2024-04-14T01:00:00.112")).thenReturn(sensorDataList);
 
         double maxValue = sensorDataService.getSensorDataMaxValue("Sensor_1", "2021-04-14T01:00:00.112", "2024-04-14T01:00:00.112");
@@ -79,7 +79,7 @@ class SensorDataServiceTest {
     }
 
     @Test
-    void getSensorDataAvgValue() {
+    void testGetSensorDataAvgValue() {
         when(sensorDataRepository.findBySensorNameAndReportTimestampBetween("Sensor_1", "2021-04-14T01:00:00.112", "2024-04-14T01:00:00.112")).thenReturn(sensorDataList);
 
         double avgValue = sensorDataService.getSensorDataAvgValue("Sensor_1", "2021-04-14T01:00:00.112", "2024-04-14T01:00:00.112");
@@ -88,7 +88,7 @@ class SensorDataServiceTest {
     }
 
     @Test
-    void getSensorDataMedianValue() {
+    void testGetSensorDataMedianValue() {
         when(sensorDataRepository.findBySensorNameAndReportTimestampBetween("Sensor_1", "2021-04-14T01:00:00.112", "2024-04-14T01:00:00.112")).thenReturn(sensorDataList);
         double medianValue = sensorDataService.getSensorDataMedianValue("Sensor_1", "2021-04-14T01:00:00.112", "2024-04-14T01:00:00.112");
 
