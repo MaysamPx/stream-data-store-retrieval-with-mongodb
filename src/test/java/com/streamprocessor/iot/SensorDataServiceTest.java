@@ -27,7 +27,7 @@ class SensorDataServiceTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         sensorDataList = new ArrayList<>();
         SensorDataDTO sensorDataDTO1 = new SensorDataDTO();
         sensorDataDTO1.setSensorName("Sensor_1");
