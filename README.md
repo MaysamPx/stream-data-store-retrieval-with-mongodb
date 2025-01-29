@@ -85,6 +85,27 @@ Postman Collection (Not ready yet)
 
 •	Import the provided Postman collection in the 'PostmanCollectionForRESTAPIs' directory.
 
+#### Get Token by this call:
+```
+curl --location 'localhost:8080/authenticate' \
+--header 'Content-Type: application/json' \
+--data '{
+    "username": "datastream",
+    "password": "Datastream1!"
+}'
+```
+
+#### Start the Sample Data Generator
+```
+curl --location 'localhost:8080/generator/start' \
+--header 'Authorization: Bearer PASTE_TOKEN_HERE'
+```
+
+#### Wait for a few seconds and call metric APIs. e.g: it fetches average of reported metrics for "Sensor_1"
+```
+curl --location 'http://localhost:8080/api/v1/Sensor_1/average?start=2025-01-22T13%3A27%3A48.994&end=2025-01-29T14%3A27%3A48.994' \
+--header 'Authorization: Bearer PASTE_TOKEN_HERE'
+```
 
 ### Final tips
 #### Application Flow:

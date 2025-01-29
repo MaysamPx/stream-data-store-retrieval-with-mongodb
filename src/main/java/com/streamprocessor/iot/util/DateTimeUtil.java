@@ -16,7 +16,7 @@ public class DateTimeUtil {
         return LocalDateTime.parse(timestamp, format);
     }
 
-    public static APIRequestInterval getRequestInterval(String start, String end) throws InconsistentPassedInterval, InvalidPassedIntervalParameters {
+    public static APIRequestInterval getRequestInterval(String start, String end) throws InconsistentPassedInterval {
         APIRequestInterval requestInterval;
         if(start != null && end != null){
             LocalDateTime startDate = DateTimeUtil.getLocalDateTimeFromString(start);
@@ -27,8 +27,8 @@ public class DateTimeUtil {
             }
 
             requestInterval = new APIRequestInterval(start, end);
-        }else {
-            throw new InvalidPassedIntervalParameters();
+        } else {
+            requestInterval = new APIRequestInterval(LocalDateTime.now().plusDays(-7L).toString(), LocalDateTime.now().toString());
         }
 
         return requestInterval;
