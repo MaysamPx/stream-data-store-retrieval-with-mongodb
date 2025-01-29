@@ -19,5 +19,4 @@ public class SensorNotFoundException extends Exception{
         return sensorName;
     }
 
-
 }

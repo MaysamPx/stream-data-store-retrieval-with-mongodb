@@ -77,7 +77,7 @@ public class SensorStreamDataController {
             APIRequestInterval requestInterval = DateTimeUtil.getRequestInterval(start, end);
             double minValue = sensorDataService.getSensorDataMinValue(sensorName, requestInterval.getStart(), requestInterval.getEnd());
             return ResponseEntity.ok(minValue);
-        } catch (InconsistentPassedInterval | InvalidPassedIntervalParameters e) {
+        } catch (InconsistentPassedInterval e) {
             String errorMessage = "Invalid request parameters: " + e.getMessage();
             return ResponseEntity.badRequest().body(new ErrorResponse(errorMessage));
         } catch (SensorNotFoundException e) {
@@ -104,7 +104,7 @@ public class SensorStreamDataController {
             APIRequestInterval requestInterval = DateTimeUtil.getRequestInterval(start, end);
             double maxValue = sensorDataService.getSensorDataMaxValue(sensorName, requestInterval.getStart(), requestInterval.getEnd());
             return ResponseEntity.ok(maxValue);
-        } catch (InconsistentPassedInterval | InvalidPassedIntervalParameters e) {
+        } catch (InconsistentPassedInterval e) {
             String errorMessage = "Invalid request parameters: " + e.getMessage();
             return ResponseEntity.badRequest().body(new ErrorResponse(errorMessage));
         } catch (SensorNotFoundException e) {
@@ -131,7 +131,7 @@ public class SensorStreamDataController {
             APIRequestInterval requestInterval = DateTimeUtil.getRequestInterval(start, end);
             double averageValue = sensorDataService.getSensorDataAvgValue(sensorName, requestInterval.getStart(), requestInterval.getEnd());
             return ResponseEntity.ok(averageValue);
-        } catch (InconsistentPassedInterval | InvalidPassedIntervalParameters e) {
+        } catch (InconsistentPassedInterval e) {
             String errorMessage = "Invalid request parameters: " + e.getMessage();
             return ResponseEntity.badRequest().body(new ErrorResponse(errorMessage));
         } catch (SensorNotFoundException e) {
@@ -158,7 +158,7 @@ public class SensorStreamDataController {
             APIRequestInterval requestInterval = DateTimeUtil.getRequestInterval(start, end);
             double medianValue = sensorDataService.getSensorDataMedianValue(sensorName, requestInterval.getStart(), requestInterval.getEnd());
             return ResponseEntity.ok(medianValue);
-        } catch (InconsistentPassedInterval | InvalidPassedIntervalParameters e) {
+        } catch (InconsistentPassedInterval e) {
             String errorMessage = "Invalid request parameters: " + e.getMessage();
             return ResponseEntity.badRequest().body(new ErrorResponse(errorMessage));
         } catch (SensorNotFoundException e) {

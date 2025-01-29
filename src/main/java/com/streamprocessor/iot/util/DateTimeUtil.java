@@ -1,7 +1,6 @@
 package com.streamprocessor.iot.util;
 
 import com.streamprocessor.iot.exceptions.InconsistentPassedInterval;
-import com.streamprocessor.iot.exceptions.InvalidPassedIntervalParameters;
 import com.streamprocessor.iot.model.APIRequestInterval;
 import lombok.experimental.UtilityClass;
 
